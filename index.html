@@ -1,858 +1,628 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passive Income Zone - Master Admin Portal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#06141e">
+<title>Pirate Fortune - Slot & Earn</title>
 
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Monetag Rewarded SDK -->
+<script src="https://libtl.com/sdk.js" data-zone="11972254" data-sdk="show_11972254" async></script>
 
-    <style>
-        :root {
-            --primary: #1c64f2;
-            --primary-glow: rgba(28, 100, 242, 0.25);
-            --bg-dark: #090d16;
-            --card-bg: #111827;
-            --border: #1f2937;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
+<style>
+:root {
+    --bg-dark: #06141e;
+    --card-bg: #0d2331;
+    --gold: #fbc02d;
+    --gold-bright: #ffe259;
+    --gold-dark: #ffa751;
+    --cyan: #00e5ff;
+    --accent: #2e7d32;
+    --text-muted: #8fa7b3;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; }
+body {
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #fff;
+    background: radial-gradient(circle at 50% 10%, #173b4d 0%, #091c2a 55%, #030a10 100%);
+    display: flex;
+    justify-content: center;
+}
 
-        body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(28, 100, 242, 0.12) 0%, transparent 50%),
-                linear-gradient(180deg, #090d16 0%, #030712 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-        }
+.app {
+    width: 100%;
+    max-width: 440px;
+    min-height: 100vh;
+    padding: 16px 14px 30px;
+    display: flex;
+    flex-direction: column;
+}
 
-        .admin-wrapper {
-            width: 100%;
-            max-width: 960px;
-            padding: 20px 16px 80px 16px;
-        }
+/* HEADER */
+.header { text-align: center; margin-bottom: 14px; }
+.pirate-icon { font-size: 42px; line-height: 1; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); }
+.title {
+    margin: 4px 0 2px;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    background: linear-gradient(180deg, #fff275, #ffa726);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+.subtitle { margin: 0; font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; }
 
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
+/* TOP BAR */
+.top-bar { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.level-card, .balance-card {
+    flex: 1;
+    background: rgba(6, 20, 30, 0.85);
+    border: 1px solid #1f4559;
+    border-radius: 16px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
 
-        .admin-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.level-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: var(--cyan); }
+.xp-bg { width: 100%; height: 6px; background: #132a38; border-radius: 6px; margin-top: 5px; overflow: hidden; }
+.xp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00d2ff, #00fff7); transition: width 0.4s ease; }
 
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            box-shadow: 0 4px 12px var(--primary-glow);
-        }
+.balance-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+.coin-badge {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff7a1, #f59e0b, #b45309);
+    border: 1.5px solid #ffec85;
+    color: #451a03;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+}
+.balance-info { display: flex; flex-direction: column; }
+.balance-label { font-size: 9px; color: var(--text-muted); font-weight: bold; }
+.balance-val { font-size: 16px; font-weight: 900; color: #fff; }
 
-        .admin-header h2 {
-            font-size: 18px;
-            font-weight: 800;
-        }
+/* TABS */
+.nav-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+.nav-tab {
+    flex: 1;
+    padding: 10px;
+    background: #0d2838;
+    border: 1px solid #1f4b63;
+    color: #9cbacf;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+.nav-tab.active {
+    background: linear-gradient(180deg, #ffe066, #f59e0b);
+    border-color: #ffd43b;
+    color: #3b1b00;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
 
-        .btn-logout {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
 
-        .tab-nav {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-        }
+/* MACHINE */
+.machine {
+    padding: 14px;
+    border-radius: 24px;
+    background: linear-gradient(160deg, #163f52, #0b1e28);
+    border: 2px solid #28576f;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
 
-        .tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
+.reels-container {
+    position: relative;
+    padding: 8px;
+    border-radius: 18px;
+    background: #050e14;
+    border: 3px solid #b78121;
+    box-shadow: inset 0 0 15px #000;
+}
+.reels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.reel {
+    position: relative;
+    height: 130px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #eaedf0, #ffffff, #d3dadf);
+    border: 2px solid #5a7380;
+}
+.reel-line {
+    position: absolute; left: 0; right: 0; top: 50%; height: 2px;
+    background: #ffb703; box-shadow: 0 0 8px #ffb703; z-index: 10;
+}
+.reel-shadow {
+    position: absolute; inset: 0; z-index: 8; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.7) 100%);
+}
+.symbols { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; }
+.symbol { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 52px; user-select: none; }
+.reel.spinning .symbols { filter: blur(2.5px); }
 
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 4px 14px var(--primary-glow);
-        }
+/* STATUS & BUTTONS */
+.status {
+    min-height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; margin: 10px 0;
+    font-size: 14px; font-weight: 800; color: #ffd644;
+}
 
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
+.btn-spin {
+    width: 100%; height: 54px;
+    border: none; border-radius: 16px;
+    font-size: 18px; font-weight: 900;
+    cursor: pointer; color: #3b1900;
+    background: linear-gradient(180deg, #ffe066, #f59e0b 45%, #b45309);
+    border: 2px solid #fff08a;
+    box-shadow: 0 5px 0 #78350f, 0 8px 18px rgba(0,0,0,0.6);
+    transition: transform 0.1s;
+}
+.btn-spin:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 #78350f; }
+.btn-spin:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .section-card h3 {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.btn-ad {
+    width: 100%; height: 46px; margin-top: 10px;
+    border-radius: 14px; border: 1px solid #28556d;
+    background: linear-gradient(160deg, #153c4f, #091a24);
+    color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.btn-ad:disabled { opacity: 0.5; cursor: not-allowed; }
+.cooldown-text { color: var(--text-muted); font-size: 11px; text-align: center; margin-top: 5px; font-weight: 600; min-height: 16px; }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-            margin-bottom: 16px;
-        }
+/* REWARD LIST */
+.reward-grid {
+    display: flex; justify-content: space-around;
+    background: rgba(6, 20, 30, 0.7);
+    border: 1px solid #163647;
+    border-radius: 12px;
+    padding: 8px 6px;
+    margin-top: 12px;
+    font-size: 11px;
+}
+.reward-item { text-align: center; }
+.reward-item span { display: block; color: var(--gold-bright); font-weight: 800; }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+/* WITHDRAW CARD */
+.withdraw-box {
+    background: var(--card-bg);
+    border: 1.5px solid #224d63;
+    border-radius: 20px;
+    padding: 16px;
+}
+.withdraw-header {
+    text-align: center;
+    background: #071520;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    border: 1px dashed #28556d;
+}
+.withdraw-rate { font-size: 12px; color: var(--gold-bright); font-weight: 700; }
 
-        .form-group label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+.form-group input, .form-group select {
+    width: 100%; padding: 12px; border-radius: 10px;
+    border: 1px solid #23495d; background: #06141e;
+    color: #fff; font-size: 14px; outline: none;
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--cyan); }
 
-        .styled-input, .styled-select, .styled-textarea {
-            background: #030712;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 14px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+.btn-withdraw {
+    width: 100%; height: 48px;
+    background: linear-gradient(180deg, #2e7d32, #1b5e20);
+    border: 1px solid #4caf50; color: #fff;
+    font-size: 15px; font-weight: 800; border-radius: 12px;
+    cursor: pointer; margin-top: 6px;
+}
 
-        .styled-input:focus, .styled-select:focus, .styled-textarea:focus {
-            border-color: var(--primary);
-        }
-
-        .styled-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .btn-action {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px var(--primary-glow);
-        }
-
-        .btn-cancel-edit {
-            background: #1f2937;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            gap: 6px;
-            margin-left: 8px;
-        }
-
-        .feed-item {
-            background: #030712;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .feed-info h4 {
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .feed-info p {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .badge-cat {
-            font-size: 10px;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(28, 100, 242, 0.18);
-            color: #60a5fa;
-            text-transform: uppercase;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-edit {
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
-            border: 1px solid #3b82f6;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            color: var(--text-muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 11px;
-        }
-
-        .btn-approve {
-            background: var(--success);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-right: 4px;
-        }
-
-        .btn-reject {
-            background: var(--danger);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-    </style>
+/* MODAL */
+.modal {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal.show { display: flex; }
+.modal-content {
+    width: 100%; max-width: 320px;
+    background: linear-gradient(160deg, #173b4d, #071722);
+    border: 2px solid #ffca28;
+    border-radius: 22px; padding: 22px 18px; text-align: center;
+    box-shadow: 0 0 30px rgba(255, 202, 40, 0.3);
+    animation: pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+@keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon { font-size: 44px; margin-bottom: 6px; }
+.modal-title { font-size: 20px; font-weight: 900; color: var(--gold-bright); margin-bottom: 6px; }
+.modal-body { font-size: 13px; line-height: 1.5; color: #e1e9ee; margin-bottom: 16px; white-space: pre-line; }
+.modal-btn {
+    width: 100%; height: 42px; border: none; border-radius: 12px;
+    background: linear-gradient(180deg, #ffe066, #f59e0b);
+    color: #3b1900; font-size: 15px; font-weight: 800; cursor: pointer;
+}
+</style>
 </head>
 <body>
 
-    <div class="admin-wrapper">
-        <div class="admin-header">
-            <div class="brand">
-                <div class="brand-icon"><i class="fas fa-sliders"></i></div>
-                <div>
-                    <h2>Passive Income Control Hub</h2>
-                    <span style="font-size: 11px; color: var(--text-muted);" id="currentAdminEmail">admin@domain.com</span>
-                </div>
+<div class="app">
+    <!-- Header -->
+    <div class="header">
+        <div class="pirate-icon">🏴‍☠️</div>
+        <div class="title">PIRATE FORTUNE</div>
+        <div class="subtitle">SPIN • COLLECT • CASHOUT</div>
+    </div>
+
+    <!-- Status & Info -->
+    <div class="top-bar">
+        <div class="level-card">
+            <div class="level-meta">
+                <span>LEVEL <span id="level-val">1</span></span>
+                <span id="xp-text">0/100</span>
             </div>
-            <button class="btn-logout" onclick="handleLogout()"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out</button>
+            <div class="xp-bg"><div class="xp-fill" id="xp-fill"></div></div>
         </div>
 
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchSection('viralVideosTab', this)"><i class="fas fa-fire"></i> Viral Videos</button>
-            <button class="tab-btn" onclick="switchSection('moviesTab', this)"><i class="fas fa-film"></i> Movies Hub</button>
-            <button class="tab-btn" onclick="switchSection('settingsTab', this)"><i class="fas fa-gear"></i> System Config</button>
-            <button class="tab-btn" onclick="switchSection('withdrawTab', this)"><i class="fas fa-wallet"></i> Payout Queue</button>
-        </div>
-
-        <!-- 1. VIRAL VIDEOS TAB -->
-        <div id="viralVideosTab" class="content-tab">
-            <div class="section-card">
-                <h3 id="viralFormTitle"><i class="fas fa-fire" style="color: #ef4444;"></i> Add New Viral Video</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="viralCategory" class="styled-select">
-                            <option value="viral_video">Viral Video</option>
-                            <option value="facebook">Facebook Viral</option>
-                            <option value="instagram">Instagram Viral</option>
-                            <option value="tiktok">TikTok Viral</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Video Title</label>
-                        <input type="text" id="viralTitle" class="styled-input" placeholder="e.g. Amazing Reels Video">
-                    </div>
-                    <div class="form-group">
-                        <label>Monetag Ads Required to Unlock</label>
-                        <input type="number" id="viralRequiredAds" class="styled-input" min="1" max="10" placeholder="Default (e.g. 2)">
-                    </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Short Description (Optional)</label>
-                        <textarea id="viralDescription" class="styled-textarea" placeholder="Short description..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Short / Preview Video Link (Direct MP4) *</label>
-                        <input type="url" id="viralPreviewUrl" class="styled-input" placeholder="https://example.com/short.mp4">
-                    </div>
-                    <div class="form-group">
-                        <label>Full Video Link (Optional)</label>
-                        <input type="url" id="viralFullUrl" class="styled-input" placeholder="Optional (https://example.com/full_video.mp4)">
-                    </div>
-                </div>
-                <button class="btn-action" id="btnUploadViral" onclick="uploadViralPost()">
-                    <i class="fas fa-cloud-arrow-up"></i> <span id="btnViralUploadText">Publish Viral Video</span>
-                </button>
-                <button class="btn-cancel-edit" id="btnCancelViralEdit" onclick="cancelEditViral()">
-                    <i class="fas fa-xmark"></i> Cancel Edit
-                </button>
-            </div>
-
-            <div class="section-card">
-                <h3><i class="fas fa-list-check"></i> Active Viral Videos Library</h3>
-                <div id="viralListContainer">
-                    <p style="color: var(--text-muted); font-size: 13px;">Loading viral videos...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. MOVIES TAB -->
-        <div id="moviesTab" class="content-tab" style="display: none;">
-            <div class="section-card">
-                <h3 id="movieFormTitle"><i class="fas fa-clapperboard" style="color: var(--primary);"></i> Add New Movie</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="movieCategory" class="styled-select">
-                            <option value="new_movie">New Movie</option>
-                            <option value="action">Action</option>
-                            <option value="hindi">Hindi Dubbed</option>
-                            <option value="hollywood">Hollywood</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Movie Title</label>
-                        <input type="text" id="movieTitle" class="styled-input" placeholder="e.g. Blockbuster Movie 2026">
-                    </div>
-                    <div class="form-group">
-                        <label>Monetag Ads Required to Unlock</label>
-                        <input type="number" id="movieRequiredAds" class="styled-input" min="1" max="10" placeholder="Default (e.g. 2)">
-                    </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Movie Plot / Description (Optional)</label>
-                        <textarea id="movieDescription" class="styled-textarea" placeholder="Overview..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Short Clip / Trailer Link (MP4) *</label>
-                        <input type="url" id="moviePreviewUrl" class="styled-input" placeholder="https://example.com/short_trailer.mp4">
-                    </div>
-                    <div class="form-group">
-                        <label>Full Movie Stream Link (Optional)</label>
-                        <input type="url" id="movieFullUrl" class="styled-input" placeholder="Optional (https://example.com/movie_stream)">
-                    </div>
-                </div>
-                <button class="btn-action" id="btnUploadMovie" onclick="uploadMoviePost()">
-                    <i class="fas fa-cloud-arrow-up"></i> <span id="btnMovieUploadText">Publish Movie</span>
-                </button>
-                <button class="btn-cancel-edit" id="btnCancelMovieEdit" onclick="cancelEditMovie()">
-                    <i class="fas fa-xmark"></i> Cancel Edit
-                </button>
-            </div>
-
-            <div class="section-card">
-                <h3><i class="fas fa-video"></i> Active Movies Library</h3>
-                <div id="moviesListContainer">
-                    <p style="color: var(--text-muted); font-size: 13px;">Loading movies...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. SYSTEM CONFIG TAB -->
-        <div id="settingsTab" class="content-tab" style="display: none;">
-            <div class="section-card">
-                <h3><i class="fas fa-coins" style="color: var(--warning);"></i> Global Economy & Ad Config</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Default Movie/Video Ads Count</label>
-                        <input type="number" min="1" max="10" id="configDefaultMovieAds" class="styled-input" placeholder="2">
-                    </div>
-                    <div class="form-group">
-                        <label>Per Video Ad Reward (USDT)</label>
-                        <input type="number" step="0.0001" id="configPerAdReward" class="styled-input" placeholder="0.001">
-                    </div>
-                    <div class="form-group">
-                        <label>Daily Shorts Video Limit (Times)</label>
-                        <input type="number" id="configDailyAdLimit" class="styled-input" placeholder="10">
-                    </div>
-                    <div class="form-group">
-                        <label>Daily Spin Limit (Times)</label>
-                        <input type="number" id="configSpinLimit" class="styled-input" placeholder="5">
-                    </div>
-                    <div class="form-group">
-                        <label>Referral Bonus (USDT per user)</label>
-                        <input type="number" step="0.01" id="configReferBonus" class="styled-input" placeholder="0.05">
-                    </div>
-                    <div class="form-group">
-                        <label>Minimum Withdrawal (USDT)</label>
-                        <input type="number" step="0.1" id="configMinWithdraw" class="styled-input" placeholder="1.00">
-                    </div>
-                </div>
-                <button class="btn-action" onclick="saveSystemSettings()"><i class="fas fa-floppy-disk"></i> Save Global Settings</button>
-            </div>
-        </div>
-
-        <!-- 4. WITHDRAW QUEUE TAB -->
-        <div id="withdrawTab" class="content-tab" style="display: none;">
-            <div class="section-card">
-                <h3><i class="fas fa-clock-rotate-left" style="color: var(--warning);"></i> Pending Payout Requests</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>User ID</th>
-                                <th>Network</th>
-                                <th>Address / Pay ID</th>
-                                <th>Amount (USDT)</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="withdrawTableBody">
-                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No pending requests found.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="balance-card">
+            <div class="coin-badge">C</div>
+            <div class="balance-info">
+                <span class="balance-label">COINS</span>
+                <span class="balance-val" id="coins-val">1,000</span>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Tab Buttons -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" id="tab-btn-game" onclick="setTab('game')">🎰 স্পিন গেম</button>
+        <button class="nav-tab" id="tab-btn-withdraw" onclick="setTab('withdraw')">💸 উইথড্রল</button>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAl0eRqOs5QNUg_J1Pj-4PlEqRDxAXr-oA",
-            authDomain: "viral-zone-bd.firebaseapp.com",
-            projectId: "viral-zone-bd",
-            storageBucket: "viral-zone-bd.firebasestorage.app",
-            messagingSenderId: "794737483555",
-            appId: "1:794737483555:web:a275cd96aafff0e640f696",
-            databaseURL: "https://viral-zone-bd-default-rtdb.firebaseio.com"
-        };
+    <!-- TAB 1: Game -->
+    <div id="pane-game" class="tab-pane active">
+        <div class="machine">
+            <div class="reels-container">
+                <div class="reels">
+                    <div class="reel" id="reel0"><div class="symbols"></div><div class="reel-line"></div><div class="reel-shadow"></div></div>
+                    <div class="reel" id="reel1"><div class="symbols"></div><div class="reel-line"></div><div class="reel-shadow"></div></div>
+                    <div class="reel" id="reel2"><div class="symbols"></div><div class="reel-line"></div><div class="reel-shadow"></div></div>
+                </div>
+            </div>
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+            <div class="status" id="game-status">ভাগ্য পরীক্ষা করতে স্পিন করুন!</div>
 
-        let editingViralKey = null;
-        let cachedViralData = {};
+            <button class="btn-spin" id="spinBtn" onclick="handleSpin()">🎰 SPIN — ১০ কয়েন</button>
+            <button class="btn-ad" id="adBtn" onclick="handleAdReward()">🎁 ভিডিও দেখে +১০০ কয়েন নিন</button>
+            <div class="cooldown-text" id="cooldown-timer"></div>
 
-        let editingMovieKey = null;
-        let cachedMovieData = {};
-        let globalDefaultAds = 2;
+            <div class="reward-grid">
+                <div class="reward-item">💎💎💎<span>+500</span></div>
+                <div class="reward-item">👑👑👑<span>+300</span></div>
+                <div class="reward-item">💰💰💰<span>+200</span></div>
+                <div class="reward-item">যেকোনো ২ মিল<span>+30</span></div>
+            </div>
+        </div>
+    </div>
 
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = "admin-login.html";
-            } else {
-                document.getElementById('currentAdminEmail').innerText = user.email;
-                loadDashboardData();
-            }
-        });
+    <!-- TAB 2: Withdraw -->
+    <div id="pane-withdraw" class="tab-pane">
+        <div class="withdraw-box">
+            <div class="withdraw-header">
+                <div class="withdraw-rate">১,০০০ কয়েন = ১.০০ USD / ১২০ টাকা</div>
+            </div>
 
-        function handleLogout() {
-            auth.signOut().then(() => {
-                window.location.href = "admin-login.html";
-            });
+            <div class="form-group">
+                <label>পেমেন্ট মেথড নির্বাচন করুন:</label>
+                <select id="wd-method">
+                    <option value="bKash">বিকাশ (bKash - Personal)</option>
+                    <option value="Nagad">নগদ (Nagad - Personal)</option>
+                    <option value="Binance/USDT">Binance Pay / USDT (Global)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>কয়েন পরিমাণ (মিনিমাম ১,০০০):</label>
+                <input type="number" id="wd-amount" placeholder="যেমন: 1000" min="1000">
+            </div>
+
+            <div class="form-group">
+                <label>অ্যাকাউন্ট নম্বর / ওয়ালেট অ্যাড্রেস:</label>
+                <input type="text" id="wd-account" placeholder="017xxxxxxxx অথবা USDT Address">
+            </div>
+
+            <button class="btn-withdraw" onclick="processWithdrawal()">উইথড্র রিকোয়েস্ট পাঠান</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="alertModal">
+    <div class="modal-content">
+        <div class="modal-icon" id="m-icon">🎉</div>
+        <div class="modal-title" id="m-title">অভিনন্দন!</div>
+        <div class="modal-body" id="m-body">আপনি রিওয়ার্ড পেয়েছেন।</div>
+        <button class="modal-btn" onclick="closeModal()">ঠিক আছে</button>
+    </div>
+</div>
+
+<script>
+const CONFIG = {
+    SPIN_COST: 10,
+    AD_REWARD: 100,
+    AD_COOLDOWN_SEC: 300,
+    SYMBOL_HEIGHT: 130
+};
+
+const SYMBOLS = [
+    { icon: "💎", reward: 500 },
+    { icon: "👑", reward: 300 },
+    { icon: "💰", reward: 200 },
+    { icon: "🪙", reward: 100 },
+    { icon: "🍒", reward: 60 },
+    { icon: "⚓", reward: 40 }
+];
+
+let state = {
+    coins: Number(localStorage.getItem("pf_coins")) || 1000,
+    level: Number(localStorage.getItem("pf_level")) || 1,
+    xp: Number(localStorage.getItem("pf_xp")) || 0,
+    adCooldown: Number(localStorage.getItem("pf_ad_cd")) || 0,
+    spinning: false
+};
+
+const reels = [
+    document.getElementById("reel0"),
+    document.getElementById("reel1"),
+    document.getElementById("reel2")
+];
+
+function saveState() {
+    localStorage.setItem("pf_coins", state.coins);
+    localStorage.setItem("pf_level", state.level);
+    localStorage.setItem("pf_xp", state.xp);
+    localStorage.setItem("pf_ad_cd", state.adCooldown);
+}
+
+function updateUI() {
+    document.getElementById("coins-val").textContent = state.coins.toLocaleString();
+    document.getElementById("level-val").textContent = state.level;
+    
+    const targetXp = state.level * 100;
+    const progress = Math.min(100, (state.xp / targetXp) * 100);
+    document.getElementById("xp-fill").style.width = progress + "%";
+    document.getElementById("xp-text").textContent = `${state.xp}/${targetXp}`;
+    
+    checkAdCooldown();
+}
+
+function addXP(amount) {
+    state.xp += amount;
+    const targetXp = state.level * 100;
+    if (state.xp >= targetXp) {
+        state.xp -= targetXp;
+        state.level++;
+        state.coins += 150;
+        showModal("⭐", "লেভেল আপ!", `লেভেল ${state.level}-এ পৌঁছানোর জন্য ১৫০ কয়েন বোনাস পেয়েছেন!`);
+    }
+    saveState();
+    updateUI();
+}
+
+function setTab(tab) {
+    document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+
+    if (tab === 'game') {
+        document.getElementById("tab-btn-game").classList.add("active");
+        document.getElementById("pane-game").classList.add("active");
+    } else {
+        document.getElementById("tab-btn-withdraw").classList.add("active");
+        document.getElementById("pane-withdraw").classList.add("active");
+    }
+}
+
+function buildReels() {
+    reels.forEach(reel => {
+        const container = reel.querySelector(".symbols");
+        container.innerHTML = "";
+        for (let i = 0; i < 36; i++) {
+            const sym = SYMBOLS[i % SYMBOLS.length];
+            const div = document.createElement("div");
+            div.className = "symbol";
+            div.textContent = sym.icon;
+            container.appendChild(div);
         }
+        container.style.transform = "translateY(0px)";
+    });
+}
 
-        function switchSection(tabId, btn) {
-            document.querySelectorAll('.content-tab').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
-            btn.classList.add('active');
+function spinReelAnim(reel, targetIdx, duration) {
+    return new Promise(resolve => {
+        const container = reel.querySelector(".symbols");
+        const stopPosition = 36 - 6 + targetIdx;
+        const translateY = -(stopPosition * CONFIG.SYMBOL_HEIGHT);
+        
+        container.style.transition = "none";
+        container.style.transform = "translateY(0px)";
+        reel.classList.add("spinning");
+        
+        void container.offsetHeight;
+        
+        container.style.transition = `transform ${duration}ms cubic-bezier(0.12, 0.8, 0.2, 1)`;
+        container.style.transform = `translateY(${translateY}px)`;
+        
+        setTimeout(() => {
+            reel.classList.remove("spinning");
+            resolve();
+        }, duration + 50);
+    });
+}
+
+async function handleSpin() {
+    if (state.spinning) return;
+    if (state.coins < CONFIG.SPIN_COST) {
+        document.getElementById("game-status").textContent = "❌ পর্যাপ্ত কয়েন নেই! অ্যাড দেখে কয়েন নিন।";
+        return;
+    }
+
+    state.spinning = true;
+    state.coins -= CONFIG.SPIN_COST;
+    updateUI();
+
+    document.getElementById("spinBtn").disabled = true;
+    document.getElementById("game-status").textContent = "রিল ঘুরছে...";
+
+    const r = Math.random();
+    let res = [];
+    if (r < 0.12) {
+        const s = Math.floor(Math.random() * SYMBOLS.length);
+        res = [s, s, s];
+    } else if (r < 0.40) {
+        const s1 = Math.floor(Math.random() * SYMBOLS.length);
+        let s2 = Math.floor(Math.random() * SYMBOLS.length);
+        while (s2 === s1) s2 = Math.floor(Math.random() * SYMBOLS.length);
+        res = [s1, s1, s2];
+    } else {
+        res = [
+            Math.floor(Math.random() * SYMBOLS.length),
+            Math.floor(Math.random() * SYMBOLS.length),
+            Math.floor(Math.random() * SYMBOLS.length)
+        ];
+    }
+
+    await Promise.all([
+        spinReelAnim(reels[0], res[0], 1600),
+        spinReelAnim(reels[1], res[1], 2100),
+        spinReelAnim(reels[2], res[2], 2600)
+    ]);
+
+    if (res[0] === res[1] && res[1] === res[2]) {
+        const reward = SYMBOLS[res[0]].reward;
+        state.coins += reward;
+        document.getElementById("game-status").textContent = `🎉 জ্যাকপট! +${reward} কয়েন!`;
+        showModal("🏆", "জ্যাকপট উইন!", `অবিশ্বাস্য! আপনি জিতেছেন +${reward} কয়েন!`);
+        addXP(50);
+    } else if (res[0] === res[1] || res[0] === res[2] || res[1] === res[2]) {
+        state.coins += 30;
+        document.getElementById("game-status").textContent = "✨ ম্যাচ হয়েছে! +৩০ কয়েন";
+        addXP(20);
+    } else {
+        document.getElementById("game-status").textContent = "💀 কোনো মিল নেই — আবার চেষ্টা করুন!";
+        addXP(5);
+    }
+
+    state.spinning = false;
+    document.getElementById("spinBtn").disabled = false;
+    saveState();
+    updateUI();
+}
+
+function checkAdCooldown() {
+    const now = Date.now();
+    const adBtn = document.getElementById("adBtn");
+    const timerText = document.getElementById("cooldown-timer");
+
+    if (state.adCooldown > now) {
+        const rem = Math.ceil((state.adCooldown - now) / 1000);
+        const m = Math.floor(rem / 60);
+        const s = rem % 60;
+        adBtn.disabled = true;
+        timerText.textContent = `পরবর্তী রিওয়ার্ড: ${m}মি ${s < 10 ? '0' : ''}${s}সে পর`;
+    } else {
+        adBtn.disabled = false;
+        timerText.textContent = "";
+    }
+}
+
+async function handleAdReward() {
+    const adBtn = document.getElementById("adBtn");
+    adBtn.disabled = true;
+    document.getElementById("game-status").textContent = "বিজ্ঞাপন লোড হচ্ছে...";
+
+    const giveReward = () => {
+        state.coins += CONFIG.AD_REWARD;
+        state.adCooldown = Date.now() + (CONFIG.AD_COOLDOWN_SEC * 1000);
+        addXP(25);
+        saveState();
+        updateUI();
+        showModal("🎁", "বোনাস আনলক!", `আপনি +${CONFIG.AD_REWARD} কয়েন বোনাস পেয়েছেন!`);
+        document.getElementById("game-status").textContent = "রিওয়ার্ড যোগ হয়েছে!";
+    };
+
+    // Monetag SDK 11972254 এক্সিকিউশন
+    if (typeof show_11972254 === "function") {
+        try {
+            await show_11972254();
+            giveReward();
+        } catch (e) {
+            document.getElementById("game-status").textContent = "বিজ্ঞাপন দেখা সম্পন্ন হয়নি।";
+            checkAdCooldown();
         }
+    } else {
+        setTimeout(() => {
+            giveReward();
+        }, 1000);
+    }
+}
 
-        function loadDashboardData() {
-            db.ref('movie_posts').on('value', snap => {
-                const data = snap.val() || {};
-                renderViralFeed(data);
-                renderMovieFeed(data);
-            });
+function processWithdrawal() {
+    const amount = Number(document.getElementById("wd-amount").value);
+    const account = document.getElementById("wd-account").value.trim();
+    const method = document.getElementById("wd-method").value;
 
-            db.ref('system_settings').on('value', snap => {
-                const conf = snap.val() || {};
-                globalDefaultAds = parseInt(conf.defaultMovieAds) || 2;
-                document.getElementById('configDefaultMovieAds').value = globalDefaultAds;
-                document.getElementById('configPerAdReward').value = conf.perAdReward || 0.001;
-                document.getElementById('configDailyAdLimit').value = conf.dailyAdLimit || 10;
-                document.getElementById('configSpinLimit').value = conf.spinLimit || 5;
-                document.getElementById('configReferBonus').value = conf.referBonus || 0.05;
-                document.getElementById('configMinWithdraw').value = conf.minWithdraw || 1.00;
-            });
+    if (!amount || amount < 1000) {
+        showModal("⚠️", "ভুল পরিমাণ", "নূন্যতম ১,০০০ কয়েন উইথড্র করতে হবে।");
+        return;
+    }
+    if (account.length < 5) {
+        showModal("⚠️", "অ্যাকাউন্ট দিন", "সঠিক অ্যাকাউন্ট নম্বর বা ওয়ালেট দিন।");
+        return;
+    }
+    if (state.coins < amount) {
+        showModal("❌", "ব্যালেন্স অপর্যাপ্ত", "আপনার অ্যাকাউন্টে পর্যাপ্ত কয়েন নেই।");
+        return;
+    }
 
-            db.ref('admin_withdraw_queue').on('value', snap => {
-                const tbody = document.getElementById('withdrawTableBody');
-                const data = snap.val();
-                if (!data) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No pending requests.</td></tr>';
-                    return;
-                }
+    state.coins -= amount;
+    saveState();
+    updateUI();
 
-                let html = '';
-                Object.keys(data).forEach(key => {
-                    const req = data[key];
-                    if (req.status === "Pending") {
-                        html += `
-                            <tr>
-                                <td><b>${req.userId}</b></td>
-                                <td>${req.network}</td>
-                                <td style="font-family: monospace;">${req.address}</td>
-                                <td style="color: var(--success); font-weight: 700;">$${parseFloat(req.finalUsdt || req.amountUsdt).toFixed(3)}</td>
-                                <td>
-                                    <button class="btn-approve" onclick="handleWithdrawStatus('${key}', '${req.userId}', 'Paid')">Approve</button>
-                                    <button class="btn-reject" onclick="handleWithdrawStatus('${key}', '${req.userId}', 'Rejected', ${req.amountUsdt})">Reject</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-                });
-                tbody.innerHTML = html || '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No pending requests.</td></tr>';
-            });
-        }
+    document.getElementById("wd-amount").value = "";
+    document.getElementById("wd-account").value = "";
 
-        const viralCategories = ['viral_video', 'facebook', 'instagram', 'tiktok'];
+    showModal("✅", "অনুরোধ গৃহীত হয়েছে", `মেথড: ${method}\nপরিমাণ: ${amount} কয়েন\nঅ্যাকাউন্ট: ${account}\n\nআপনার পেমেন্ট পর্যালোচনা করা হচ্ছে।`);
+}
 
-        function renderViralFeed(data) {
-            const container = document.getElementById('viralListContainer');
-            cachedViralData = {};
-            let html = '';
+function showModal(icon, title, body) {
+    document.getElementById("m-icon").textContent = icon;
+    document.getElementById("m-title").textContent = title;
+    document.getElementById("m-body").textContent = body;
+    document.getElementById("alertModal").classList.add("show");
+}
 
-            Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
-                if (viralCategories.includes(item.category)) {
-                    cachedViralData[key] = item;
-                    const reqAds = (item.requiredAds !== undefined && item.requiredAds !== null && item.requiredAds !== '') 
-                        ? item.requiredAds 
-                        : globalDefaultAds;
+function closeModal() {
+    document.getElementById("alertModal").classList.remove("show");
+}
 
-                    html += `
-                        <div class="feed-item">
-                            <div class="feed-info">
-                                <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px;">
-                                    <span class="badge-cat">${item.category.replace('_', ' ')}</span>
-                                    <span style="font-size: 10px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 2px 6px; border-radius: 5px;">
-                                        <i class="fas fa-bullhorn"></i> ${reqAds} Monetag Ads
-                                    </span>
-                                </div>
-                                <h4>${item.title}</h4>
-                                <p>${(item.description || 'No description').substring(0, 75)}...</p>
-                            </div>
-                            <div class="item-actions">
-                                <button class="btn-edit" onclick="editViral('${key}')"><i class="fas fa-pen-to-square"></i></button>
-                                <button class="btn-delete" onclick="deleteVideo('${key}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-
-            container.innerHTML = html || '<p style="color: var(--text-muted); font-size: 13px;">No viral videos found.</p>';
-        }
-
-        function uploadViralPost() {
-            const cat = document.getElementById('viralCategory').value;
-            const title = document.getElementById('viralTitle').value.trim();
-            const desc = document.getElementById('viralDescription').value.trim();
-            const previewUrl = document.getElementById('viralPreviewUrl').value.trim();
-            const fullUrl = document.getElementById('viralFullUrl').value.trim();
-            const reqAdsInput = document.getElementById('viralRequiredAds').value;
-            const reqAds = reqAdsInput !== '' ? parseInt(reqAdsInput) : globalDefaultAds;
-
-            if (!title || !previewUrl) {
-                alert("ভিডিও টাইটেল এবং শর্ট/প্রিভিউ লিংক দেওয়া বাধ্যতামূলক!");
-                return;
-            }
-
-            const payload = {
-                category: cat,
-                title: title,
-                description: desc || 'Trending short video',
-                previewUrl: previewUrl,
-                fullVideoUrl: fullUrl || previewUrl,
-                requiredAds: reqAds,
-                updatedAt: Date.now()
-            };
-
-            if (editingViralKey) {
-                db.ref('movie_posts/' + editingViralKey).update(payload).then(() => {
-                    cancelEditViral();
-                    alert("ভাইরাল ভিডিও আপডেট হয়েছে!");
-                });
-            } else {
-                payload.createdAt = Date.now();
-                db.ref('movie_posts').push(payload).then(() => {
-                    cancelEditViral();
-                    alert("ভাইরাল ভিডিও সফলভাবে পাবলিশ হয়েছে!");
-                });
-            }
-        }
-
-        function editViral(key) {
-            const item = cachedViralData[key];
-            if (!item) return;
-
-            editingViralKey = key;
-            document.getElementById('viralCategory').value = item.category || 'viral_video';
-            document.getElementById('viralTitle').value = item.title || '';
-            document.getElementById('viralDescription').value = item.description || '';
-            document.getElementById('viralPreviewUrl').value = item.previewUrl || '';
-            document.getElementById('viralFullUrl').value = item.fullVideoUrl || '';
-            document.getElementById('viralRequiredAds').value = (item.requiredAds !== undefined) ? item.requiredAds : globalDefaultAds;
-
-            document.getElementById('viralFormTitle').innerHTML = '<i class="fas fa-pen-to-square" style="color: var(--warning);"></i> Edit Viral Video';
-            document.getElementById('btnViralUploadText').innerText = 'Update Video';
-            document.getElementById('btnCancelViralEdit').style.display = 'inline-flex';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function cancelEditViral() {
-            editingViralKey = null;
-            document.getElementById('viralTitle').value = "";
-            document.getElementById('viralDescription').value = "";
-            document.getElementById('viralPreviewUrl').value = "";
-            document.getElementById('viralFullUrl').value = "";
-            document.getElementById('viralRequiredAds').value = "";
-
-            document.getElementById('viralFormTitle').innerHTML = '<i class="fas fa-fire" style="color: #ef4444;"></i> Add New Viral Video';
-            document.getElementById('btnViralUploadText').innerText = 'Publish Viral Video';
-            document.getElementById('btnCancelViralEdit').style.display = 'none';
-        }
-
-        const movieCategories = ['new_movie', 'action', 'hindi', 'hollywood'];
-
-        function renderMovieFeed(data) {
-            const container = document.getElementById('moviesListContainer');
-            cachedMovieData = {};
-            let html = '';
-
-            Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
-                if (movieCategories.includes(item.category)) {
-                    cachedMovieData[key] = item;
-                    const reqAds = (item.requiredAds !== undefined && item.requiredAds !== null && item.requiredAds !== '') 
-                        ? item.requiredAds 
-                        : globalDefaultAds;
-
-                    html += `
-                        <div class="feed-item">
-                            <div class="feed-info">
-                                <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px;">
-                                    <span class="badge-cat">${item.category.replace('_', ' ')}</span>
-                                    <span style="font-size: 10px; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 2px 6px; border-radius: 5px;">
-                                        <i class="fas fa-bullhorn"></i> ${reqAds} Monetag Ads
-                                    </span>
-                                </div>
-                                <h4>${item.title}</h4>
-                                <p>${(item.description || 'No overview').substring(0, 75)}...</p>
-                            </div>
-                            <div class="item-actions">
-                                <button class="btn-edit" onclick="editMovie('${key}')"><i class="fas fa-pen-to-square"></i></button>
-                                <button class="btn-delete" onclick="deleteVideo('${key}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-
-            container.innerHTML = html || '<p style="color: var(--text-muted); font-size: 13px;">No movies found.</p>';
-        }
-
-        function uploadMoviePost() {
-            const cat = document.getElementById('movieCategory').value;
-            const title = document.getElementById('movieTitle').value.trim();
-            const desc = document.getElementById('movieDescription').value.trim();
-            const previewUrl = document.getElementById('moviePreviewUrl').value.trim();
-            const fullUrl = document.getElementById('movieFullUrl').value.trim();
-            const reqAdsInput = document.getElementById('movieRequiredAds').value;
-            const reqAds = reqAdsInput !== '' ? parseInt(reqAdsInput) : globalDefaultAds;
-
-            if (!title || !previewUrl) {
-                alert("মুভি টাইটেল এবং শর্ট ক্লিপ / ট্রেইলার লিংক দেওয়া বাধ্যতামূলক!");
-                return;
-            }
-
-            const payload = {
-                category: cat,
-                title: title,
-                description: desc || 'Trending movie overview',
-                previewUrl: previewUrl,
-                fullVideoUrl: fullUrl || previewUrl,
-                requiredAds: reqAds,
-                updatedAt: Date.now()
-            };
-
-            if (editingMovieKey) {
-                db.ref('movie_posts/' + editingMovieKey).update(payload).then(() => {
-                    cancelEditMovie();
-                    alert("মুভি আপডেট সম্পন্ন হয়েছে!");
-                });
-            } else {
-                payload.createdAt = Date.now();
-                db.ref('movie_posts').push(payload).then(() => {
-                    cancelEditMovie();
-                    alert("নতুন মুভি সফলভাবে পাবলিশ হয়েছে!");
-                });
-            }
-        }
-
-        function editMovie(key) {
-            const item = cachedMovieData[key];
-            if (!item) return;
-
-            editingMovieKey = key;
-            document.getElementById('movieCategory').value = item.category || 'new_movie';
-            document.getElementById('movieTitle').value = item.title || '';
-            document.getElementById('movieDescription').value = item.description || '';
-            document.getElementById('moviePreviewUrl').value = item.previewUrl || '';
-            document.getElementById('movieFullUrl').value = item.fullVideoUrl || '';
-            document.getElementById('movieRequiredAds').value = (item.requiredAds !== undefined) ? item.requiredAds : globalDefaultAds;
-
-            document.getElementById('movieFormTitle').innerHTML = '<i class="fas fa-pen-to-square" style="color: var(--warning);"></i> Edit Movie';
-            document.getElementById('btnMovieUploadText').innerText = 'Update Movie';
-            document.getElementById('btnCancelMovieEdit').style.display = 'inline-flex';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function cancelEditMovie() {
-            editingMovieKey = null;
-            document.getElementById('movieTitle').value = "";
-            document.getElementById('movieDescription').value = "";
-            document.getElementById('moviePreviewUrl').value = "";
-            document.getElementById('movieFullUrl').value = "";
-            document.getElementById('movieRequiredAds').value = "";
-
-            document.getElementById('movieFormTitle').innerHTML = '<i class="fas fa-clapperboard" style="color: var(--primary);"></i> Add New Movie';
-            document.getElementById('btnMovieUploadText').innerText = 'Publish Movie';
-            document.getElementById('btnCancelMovieEdit').style.display = 'none';
-        }
-
-        function deleteVideo(key) {
-            if (confirm("আপনি কি নিশ্চিত এই পোস্টটি ডিলিট করতে চান?")) {
-                db.ref('movie_posts/' + key).remove().then(() => {
-                    if (editingViralKey === key) cancelEditViral();
-                    if (editingMovieKey === key) cancelEditMovie();
-                });
-            }
-        }
-
-        function saveSystemSettings() {
-            const settings = {
-                defaultMovieAds: parseInt(document.getElementById('configDefaultMovieAds').value) || 2,
-                perAdReward: parseFloat(document.getElementById('configPerAdReward').value) || 0.001,
-                dailyAdLimit: parseInt(document.getElementById('configDailyAdLimit').value) || 10,
-                spinLimit: parseInt(document.getElementById('configSpinLimit').value) || 5,
-                referBonus: parseFloat(document.getElementById('configReferBonus').value) || 0.05,
-                minWithdraw: parseFloat(document.getElementById('configMinWithdraw').value) || 1.00
-            };
-
-            db.ref('system_settings').update(settings).then(() => {
-                alert("✅ গ্লোবাল সেটিংস সফলভাবে আপডেট হয়েছে!");
-            });
-        }
-
-        function handleWithdrawStatus(reqKey, uId, newStatus, refundUsdt) {
-            const updates = {};
-            updates['/admin_withdraw_queue/' + reqKey + '/status'] = newStatus;
-            updates['/withdraw_requests/' + uId + '/' + reqKey + '/status'] = newStatus;
-
-            if (newStatus === "Rejected" && refundUsdt) {
-                db.ref('users/' + uId + '/balance').transaction(current => {
-                    return parseFloat(((current || 0) + parseFloat(refundUsdt)).toFixed(4));
-                });
-            }
-
-            db.ref().update(updates).then(() => {
-                alert(`উইথড্র রিকোয়েস্টটি ${newStatus} করা হয়েছে!`);
-            });
-        }
-    </script>
+// Init
+buildReels();
+updateUI();
+setInterval(checkAdCooldown, 1000);
+</script>
 </body>
 </html>
