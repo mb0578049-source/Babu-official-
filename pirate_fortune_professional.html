@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#081421">
+<meta name="description" content="Pirate Fortune — a colorful slot-style coin game demo.">
+<title>Pirate Fortune | Spin & Collect</title>
+<script src="https://libtl.com/sdk.js" data-zone="11756829" data-sdk="show_11756829"></script>
+<style>
+:root{color-scheme:dark;--bg:#07111d;--panel:#101f30;--panel2:#14283b;--line:#29445a;--gold:#ffd66b;--gold2:#e8a92d;--text:#f4f7fb;--muted:#9db0c2;--cyan:#54e4ed;--green:#31c878;--shadow:0 18px 45px #0005}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#1d4560 0,#0c2032 40%,var(--bg) 78%);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{width:min(100% - 24px,520px);margin:auto;padding:22px 0 34px}
+header{text-align:center;padding:10px 8px 18px}
+.brand-icon{font-size:42px;filter:drop-shadow(0 6px 12px #0008)}
+h1{margin:5px 0 4px;color:var(--gold);font-size:clamp(26px,7vw,34px);font-weight:900;letter-spacing:1.8px;text-shadow:0 3px 0 #714b12}
+.subtitle{margin:0;color:var(--muted);font-size:12px;letter-spacing:.7px}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+.summary-card{padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:#0a1826d9;box-shadow:0 8px 22px #0002}
+.summary-label{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.summary-value{margin-top:5px;font-size:23px;font-weight:900}
+.coin-value{color:var(--gold)}.level-value{color:var(--cyan)}
+.progress{height:6px;margin-top:8px;border-radius:10px;background:#223648;overflow:hidden}.progress span{display:block;width:0;height:100%;border-radius:10px;background:linear-gradient(90deg,#24bcd2,var(--cyan));transition:width .3s}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tab{border:1px solid var(--line);border-radius:12px;padding:12px;background:#12283a;color:#c4d4e2;font-weight:800;transition:.2s}
+.tab.active{background:linear-gradient(135deg,#ffe89b,var(--gold2));color:#34230b;border-color:#ffe89b;box-shadow:0 5px 16px #e8a92d25}
+.panel{padding:14px;border:1px solid #35546a;border-radius:24px;background:linear-gradient(145deg,#17374c,#0a1927 78%);box-shadow:var(--shadow)}
+.machine-top{height:7px;border-radius:20px;margin:0 4px 13px;background:linear-gradient(90deg,#8e5b17,#fff0a0,#c48721,#fff0a0,#8e5b17)}
+.reel-frame{padding:8px;border-radius:19px;border:2px solid #b8832b;background:#050c13;box-shadow:inset 0 0 18px #000b}
+.reels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.reel{height:clamp(112px,30vw,150px);max-height:150px;position:relative;overflow:hidden;border:2px solid #607987;border-radius:13px;background:linear-gradient(90deg,#c7d2d8,#fff,#d5e0e5)}
+.symbols{position:absolute;top:0;left:0;right:0;display:flex;flex-direction:column;align-items:center}
+.symbol{height:clamp(112px,30vw,150px);max-height:150px;display:flex;align-items:center;justify-content:center;font-size:clamp(42px,13vw,62px);width:100%}
+.reel-center{position:absolute;z-index:2;left:0;right:0;top:50%;height:2px;background:var(--gold);box-shadow:0 0 9px #ffb700}
+.reel-fade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to bottom,#fff9,transparent 25%,transparent 75%,#fff9)}
+.reel.spinning .symbols{filter:blur(1.5px)}
+.section-title{text-align:center;color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1.1px;margin:15px 0 7px}
+.paytable{border:1px solid var(--line);background:#071522a8;border-radius:14px;padding:9px 12px}
+.pay-row{display:flex;justify-content:space-between;align-items:center;padding:5px 1px;font-size:12px;color:#d5e1eb}.pay-row+.pay-row{border-top:1px solid #ffffff0b}.pay-row strong{color:var(--gold);font-variant-numeric:tabular-nums}
+.status{min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:800;color:#ffe7a0;padding:7px 0}
+.primary{width:100%;min-height:54px;border:1px solid #fff0a1;border-radius:15px;background:linear-gradient(180deg,#ffed91,#ffc83d 70%,#e3a326);color:#382506;font-size:17px;font-weight:950;box-shadow:0 5px 0 #805710,0 9px 18px #0004;transition:transform .12s,filter .2s}
+.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #805710}.primary:disabled,.secondary:disabled{opacity:.48;cursor:not-allowed}
+.secondary{width:100%;min-height:47px;margin-top:10px;border:1px solid #36556b;border-radius:13px;background:linear-gradient(135deg,#1c4055,#102638);color:#f0f7fb;font-weight:850;font-size:13px}
+.cooldown{min-height:18px;text-align:center;color:var(--muted);font-size:11px;margin-top:7px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{text-align:center;padding:12px 5px;border:1px solid var(--line);border-radius:13px;background:#091827aa}
+.stat strong{display:block;font-size:20px}.stat span{display:block;margin-top:3px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.7px}
+.tab-content{display:none}.tab-content.active{display:block}
+.withdraw-card{padding:18px;border:1px solid #35546a;border-radius:22px;background:linear-gradient(145deg,#17374c,#0a1927);box-shadow:var(--shadow)}
+.withdraw-title{text-align:center;color:var(--gold);font-size:20px;font-weight:900;margin:0 0 6px}
+.withdraw-desc{text-align:center;color:var(--muted);font-size:12px;line-height:1.6;margin:0 0 15px}
+.rate{padding:11px;text-align:center;border-radius:12px;background:#071522;border:1px solid var(--line);color:var(--gold);font-size:12px;font-weight:800;margin-bottom:17px}
+label{display:block;margin:12px 0 6px;color:#c0d0dc;font-size:12px;font-weight:750}
+input,select{width:100%;min-height:46px;padding:11px 12px;border:1px solid #36556b;border-radius:11px;background:#081522;color:#fff;outline:none}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #54e4ed20}
+.notice{margin-top:13px;padding:11px 12px;border-radius:11px;border:1px solid #705b29;background:#322b19;color:#ffe5a0;font-size:11px;line-height:1.6}
+.disclaimer{text-align:center;color:#8096a8;font-size:10px;line-height:1.6;margin:16px 8px 0}
+.popup{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:20px;background:#020811d9;backdrop-filter:blur(5px)}
+.popup.show{display:flex}.popup-box{width:min(100%,360px);padding:25px 20px;text-align:center;border:1px solid var(--gold);border-radius:24px;background:linear-gradient(145deg,#1a4055,#091725);box-shadow:0 20px 70px #0009;animation:pop .24s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.popup-icon{font-size:45px}.popup-title{margin:8px 0;color:var(--gold);font-size:22px;font-weight:950}.popup-reward{white-space:pre-line;color:#e5edf4;font-size:14px;line-height:1.6;margin:0 0 18px}.popup-button{width:100%;min-height:45px;border:0;border-radius:12px;background:linear-gradient(#ffed91,#e9ae2e);color:#352305;font-weight:900}
+@media(min-width:420px){.panel{padding:17px}.summary-card{padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="app">
+<header>
+  <div class="brand-icon" aria-hidden="true">🏴‍☠️</div>
+  <h1>PIRATE FORTUNE</h1>
+  <p class="subtitle">SPIN THE REELS · COLLECT COINS · LEVEL UP</p>
+</header>
+
+<section class="summary" aria-label="Player summary">
+  <div class="summary-card">
+    <div class="summary-label"><span>Coin balance</span><span>🪙</span></div>
+    <div class="summary-value coin-value" id="coins">1,000</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label"><span>Player level</span><span>⚡</span></div>
+    <div class="summary-value level-value">LVL <span id="level-num">1</span></div>
+    <div class="progress" aria-label="Experience progress"><span id="xp-fill"></span></div>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Main navigation">
+  <button class="tab active" id="btn-game" type="button" onclick="switchTab('game')">🎰 &nbsp; GAME</button>
+  <button class="tab" id="btn-withdraw" type="button" onclick="switchTab('withdraw')">💸 &nbsp; CASHOUT</button>
+</nav>
+
+<section id="game-tab" class="tab-content active">
+  <div class="panel">
+    <div class="machine-top"></div>
+    <div class="reel-frame">
+      <div class="reels" aria-label="Slot machine">
+        <div class="reel" id="reel0"><div class="symbols"></div><div class="reel-center"></div><div class="reel-fade"></div></div>
+        <div class="reel" id="reel1"><div class="symbols"></div><div class="reel-center"></div><div class="reel-fade"></div></div>
+        <div class="reel" id="reel2"><div class="symbols"></div><div class="reel-center"></div><div class="reel-fade"></div></div>
+      </div>
+    </div>
+    <div class="section-title">✦ REWARD TABLE ✦</div>
+    <div class="paytable">
+      <div class="pay-row"><span>💎 &nbsp;💎 &nbsp;💎</span><strong>+500 coins</strong></div>
+      <div class="pay-row"><span>👑 &nbsp;👑 &nbsp;👑</span><strong>+300 coins</strong></div>
+      <div class="pay-row"><span>💰 &nbsp;💰 &nbsp;💰</span><strong>+200 coins</strong></div>
+      <div class="pay-row"><span>🪙 &nbsp;🪙 &nbsp;🪙</span><strong>+100 coins</strong></div>
+      <div class="pay-row"><span>Any 2 matching symbols</span><strong>+30 coins</strong></div>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite">Ready when you are. Good luck!</div>
+    <button class="primary" id="spinButton" type="button">🎰 &nbsp; SPIN · 10 COINS</button>
+    <button class="secondary" id="adButton" type="button">🎁 &nbsp; WATCH AD · BONUS +100</button>
+    <div class="cooldown" id="cooldown" aria-live="polite"></div>
+    <div class="stats">
+      <div class="stat"><strong id="spins">0</strong><span>TOTAL SPINS</span></div>
+      <div class="stat"><strong id="wins">0</strong><span>WINS</span></div>
+      <div class="stat"><strong id="best">0</strong><span>BEST WIN</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="withdraw-tab" class="tab-content">
+  <div class="withdraw-card">
+    <h2 class="withdraw-title">💸 Cashout Center</h2>
+    <p class="withdraw-desc">Choose a payment method and enter your requested amount.</p>
+    <div class="rate">Illustrative rate: 1,000 coins = $1.00 USD / ৳110 BDT</div>
+    <form id="withdraw-form">
+      <label for="withdraw-method">Payment method</label>
+      <select id="withdraw-method" required>
+        <option value="bKash">bKash (Bangladesh)</option>
+        <option value="Nagad">Nagad (Bangladesh)</option>
+        <option value="PayPal / Crypto">PayPal / Crypto / Other</option>
+      </select>
+      <label for="withdraw-coins">Coin amount (minimum 1,000)</label>
+      <input type="number" id="withdraw-coins" min="1000" step="1" placeholder="e.g. 1000" required>
+      <label for="withdraw-number">Account number / wallet address</label>
+      <input type="text" id="withdraw-number" minlength="5" autocomplete="off" placeholder="Enter payment details" required>
+      <button class="primary" style="margin-top:16px" type="submit">SUBMIT REQUEST</button>
+    </form>
+    <div class="notice"><strong>Demo notice:</strong> This standalone page does not send withdrawal requests or make payments. A secure server, payment integration, and verified payout terms are required before real cashouts can work. Do not enter sensitive financial information into a public demo.</div>
+  </div>
+</section>
+
+<p class="disclaimer">Pirate Fortune is a browser-based game demo. Coins are stored on this device and are not verified cash or cryptocurrency. Clearing browser data may reset your progress.</p>
+</main>
+
+<div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <div class="popup-box">
+    <div class="popup-icon" id="popupIcon">🏆</div>
+    <div class="popup-title" id="popupTitle">Nice!</div>
+    <p class="popup-reward" id="popupReward"></p>
+    <button class="popup-button" id="popupButton" type="button">CONTINUE</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+const SPIN_COST = 10;
+const AD_REWARD = 100;
+const AD_COOLDOWN = 300000;
+const symbols = [
+  {icon:'💎',value:500},{icon:'👑',value:300},{icon:'💰',value:200},
+  {icon:'🪙',value:100},{icon:'🍒',value:60},{icon:'🔱',value:40},{icon:'⚓',value:30}
+];
+const readNumber = (key, fallback=0) => {
+  const value = Number(localStorage.getItem(key));
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
+};
+let coins=readNumber('pirate_coins',1000), spins=readNumber('pirate_spins'),
+    wins=readNumber('pirate_wins'), best=readNumber('pirate_best'),
+    level=Math.max(1,readNumber('pirate_level',1)), xp=readNumber('pirate_xp');
+let spinning=false, adRunning=false, adCooldownUntil=readNumber('ad_cooldown_until');
+const $ = id => document.getElementById(id);
+const reels=[$('reel0'),$('reel1'),$('reel2')];
+
+function save(){
+  try {
+    localStorage.setItem('pirate_coins',coins);localStorage.setItem('pirate_spins',spins);
+    localStorage.setItem('pirate_wins',wins);localStorage.setItem('pirate_best',best);
+    localStorage.setItem('pirate_level',level);localStorage.setItem('pirate_xp',xp);
+    localStorage.setItem('ad_cooldown_until',adCooldownUntil);
+  } catch(e) { console.warn('Progress could not be saved in this browser.'); }
+}
+function updateUI(){
+  $('coins').textContent=coins.toLocaleString();
+  $('spins').textContent=spins.toLocaleString();
+  $('wins').textContent=wins.toLocaleString();
+  $('best').textContent=best.toLocaleString();
+  $('level-num').textContent=level;
+  $('xp-fill').style.width=Math.min(100,xp/(level*100)*100)+'%';
+  updateAdCooldown();
+}
+function addXP(amount){
+  xp+=amount;
+  while(xp>=level*100){xp-=level*100;level++;coins+=200;showPopup('⭐','LEVEL UP!',`You reached Level ${level}!\nLevel bonus: +200 coins`);}
+  updateUI();save();
+}
+function switchTab(tab){
+  const game=tab==='game';
+  $('game-tab').classList.toggle('active',game);
+  $('withdraw-tab').classList.toggle('active',!game);
+  $('btn-game').classList.toggle('active',game);
+  $('btn-withdraw').classList.toggle('active',!game);
+}
+function showPopup(icon,title,message){
+  $('popupIcon').textContent=icon;$('popupTitle').textContent=title;$('popupReward').textContent=message;
+  $('popup').classList.add('show');$('popupButton').focus();
+}
+function closePopup(){
+  $('popup').classList.remove('show');
+  if(!spinning&&!adRunning){$('spinButton').disabled=false;updateAdCooldown();}
+}
+function buildReel(reel){
+  const container=reel.querySelector('.symbols');container.replaceChildren();
+  for(let i=0;i<42;i++){
+    const item=document.createElement('div');item.className='symbol';
+    item.textContent=symbols[i%symbols.length].icon;container.appendChild(item);
+  }
+  container.style.transform='translateY(0px)';
+}
+reels.forEach(buildReel);
+function generateResult(){
+  const r=Math.random();
+  if(r<.08){const x=Math.floor(Math.random()*symbols.length);return [x,x,x];}
+  if(r<.25){const x=Math.floor(Math.random()*symbols.length);let y=Math.floor(Math.random()*symbols.length);while(y===x)y=Math.floor(Math.random()*symbols.length);return [x,x,y];}
+  return [0,0,0].map(()=>Math.floor(Math.random()*symbols.length));
+}
+function spinReel(reel,index,duration){
+  return new Promise(resolve=>{
+    const container=reel.querySelector('.symbols'),height=reel.querySelector('.symbol').getBoundingClientRect().height;
+    const target=42-8+index, finalY=-(target*height);
+    container.style.transition='none';container.style.transform='translateY(0px)';
+    reel.classList.add('spinning');void container.offsetHeight;
+    container.style.transition=`transform ${duration}ms cubic-bezier(.10,.70,.16,1)`;
+    container.style.transform=`translateY(${finalY}px)`;
+    setTimeout(()=>{reel.classList.remove('spinning');resolve();},duration+40);
+  });
+}
+function processResult(result){
+  const [a,b,c]=result;let reward=0;
+  if(a===b&&b===c){reward=symbols[a].value;$('status').textContent=`🏆 JACKPOT! +${reward} COINS`;showPopup('🏆','JACKPOT!',`You won +${reward} coins!`);addXP(50);}
+  else if(a===b||a===c||b===c){reward=30;$('status').textContent='✨ MATCH! +30 COINS';showPopup('✨','NICE MATCH!','You won +30 coins!');addXP(25);}
+  else{$('status').textContent='No match this time — try again!';addXP(10);}
+  if(reward>0){coins+=reward;wins++;best=Math.max(best,reward);}
+  updateUI();save();
+}
+async function spin(){
+  if(spinning||adRunning||$('popup').classList.contains('show'))return;
+  if(coins<SPIN_COST){$('status').textContent='Not enough coins to spin.';return;}
+  spinning=true;$('spinButton').disabled=true;$('adButton').disabled=true;
+  coins-=SPIN_COST;spins++;$('status').textContent='🎰 Reels spinning…';updateUI();save();
+  const result=generateResult();
+  await Promise.all([spinReel(reels[0],result[0],1700),spinReel(reels[1],result[1],2250),spinReel(reels[2],result[2],2800)]);
+  processResult(result);spinning=false;
+  if(!$('popup').classList.contains('show')){$('spinButton').disabled=false;updateAdCooldown();}
+}
+function updateAdCooldown(){
+  const remaining=adCooldownUntil-Date.now();
+  if(remaining>0){$('adButton').disabled=true;const secs=Math.ceil(remaining/1000);$('cooldown').textContent=`Next bonus available in ${Math.floor(secs/60)}m ${secs%60}s`;}
+  else{$('cooldown').textContent='';if(!adRunning&&!spinning)$('adButton').disabled=false;}
+}
+$('adButton').addEventListener('click',async()=>{
+  if(adRunning||spinning||Date.now()<adCooldownUntil)return;
+  if(typeof window.show_11756829!=='function'){$('status').textContent='Rewarded ad is not ready. Please try again later.';return;}
+  adRunning=true;$('adButton').disabled=true;$('spinButton').disabled=true;$('status').textContent='Opening rewarded ad…';
+  try{
+    await window.show_11756829();
+    coins+=AD_REWARD;adCooldownUntil=Date.now()+AD_COOLDOWN;addXP(30);
+    $('status').textContent=`Bonus received: +${AD_REWARD} coins!`;
+    showPopup('🎁','BONUS RECEIVED!',`+${AD_REWARD} coins added to your balance.`);
+    updateUI();save();
+  }catch(e){$('status').textContent='Ad was not completed. No bonus added.';}
+  finally{adRunning=false;if(!$('popup').classList.contains('show'))$('spinButton').disabled=false;updateAdCooldown();}
+});
+$('withdraw-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const amount=Number($('withdraw-coins').value),account=$('withdraw-number').value.trim();
+  if(!Number.isInteger(amount)||amount<1000){showPopup('⚠️','Check coin amount','Minimum cashout amount is 1,000 coins.');return;}
+  if(account.length<5){showPopup('⚠️','Check payment details','Please enter valid-looking payment details.');return;}
+  if(amount>coins){showPopup('🪙','Not enough coins','Your current balance is not enough for this amount.');return;}
+  showPopup('ℹ️','Demo only','No request has been sent and your coins have not been deducted. Connect a secure backend and payment provider to enable real withdrawals.');
+});
+$('popupButton').addEventListener('click',closePopup);
+$('popup').addEventListener('click',e=>{if(e.target===$('popup'))closePopup();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
+$('spinButton').addEventListener('click',spin);
+updateUI();
+setInterval(updateAdCooldown,1000);
+</script>
+</body>
+</html>
